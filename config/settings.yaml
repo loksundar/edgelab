@@ -1,0 +1,106 @@
+# ── intraday-trader settings ────────────────────────────────────────────────
+# Credentials live in .ENV (never here). This file is safe to commit.
+
+data:
+  # Local disk on purpose — keeps candle parquet files out of Google Drive sync.
+  dir: C:\TradingData
+  # Default candle interval for downloads/backtests.
+  interval: FIVE_MINUTE          # ONE_MINUTE | THREE_MINUTE | FIVE_MINUTE | TEN_MINUTE | FIFTEEN_MINUTE
+  history_months: 12
+
+universe:
+  # Which lists to include when downloading/scanning.
+  include:
+    - nifty50
+    - fno            # all stocks with NSE futures, derived from the instrument master
+  # Edit freely; symbols are NSE trading symbols without the -EQ suffix.
+  nifty50:
+    - ADANIENT
+    - ADANIPORTS
+    - APOLLOHOSP
+    - ASIANPAINT
+    - AXISBANK
+    - BAJAJ-AUTO
+    - BAJFINANCE
+    - BAJAJFINSV
+    - BEL
+    - BHARTIARTL
+    - CIPLA
+    - COALINDIA
+    - DRREDDY
+    - EICHERMOT
+    - ETERNAL
+    - GRASIM
+    - HCLTECH
+    - HDFCBANK
+    - HDFCLIFE
+    - HEROMOTOCO
+    - HINDALCO
+    - HINDUNILVR
+    - ICICIBANK
+    - INDUSINDBK
+    - INFY
+    - ITC
+    - JIOFIN
+    - JSWSTEEL
+    - KOTAKBANK
+    - LT
+    - M&M
+    - MARUTI
+    - NESTLEIND
+    - NTPC
+    - ONGC
+    - POWERGRID
+    - RELIANCE
+    - SBILIFE
+    - SBIN
+    - SHRIRAMFIN
+    - SUNPHARMA
+    - TATACONSUM
+    - TMPV          # Tata Motors Passenger Vehicles (post-demerger symbol)
+    - TATASTEEL
+    - TCS
+    - TECHM
+    - TITAN
+    - TRENT
+    - ULTRACEMCO
+    - WIPRO
+
+market:
+  exchange: NSE
+  open: "09:15"
+  close: "15:30"
+  square_off: "15:15"   # intraday positions closed by this time
+
+paper:
+  # Symbols the live paper bot watches: nifty50 | fno | all (whole universe)
+  watchlist: nifty50
+  # Signals it trades: all, or a YAML list of names (narrow this after backtests)
+  signals: all
+
+risk:
+  capital: 100000          # simulated capital for paper trading (INR)
+  risk_per_trade_pct: 1.0  # max % of capital risked per trade
+  daily_loss_cap_pct: 3.0  # stop trading for the day after this drawdown
+  max_open_positions: 5
+
+costs:
+  # Realistic Indian intraday cost model, applied in backtests.
+  brokerage_per_order: 20        # flat (Angel One / Zerodha style), capped at 0.03%/0.25%
+  stt_sell_pct: 0.025            # STT on sell side for intraday equity
+  exchange_txn_pct: 0.00297      # NSE transaction charge (both sides)
+  sebi_fee_pct: 0.0001
+  stamp_duty_buy_pct: 0.003
+  gst_pct: 18                    # on brokerage + txn charges
+  slippage_pct: 0.03             # assumed per side
+
+costs_delivery:
+  # CNC/delivery cost model for multi-day (daily-bar) strategies.
+  brokerage_per_order: 20        # Angel One delivery; Zerodha would be 0
+  stt_pct: 0.1                   # STT on BOTH sides for delivery
+  exchange_txn_pct: 0.00297
+  sebi_fee_pct: 0.0001
+  stamp_duty_buy_pct: 0.015
+  gst_pct: 18
+  slippage_pct: 0.03             # per side
+  dp_charge_sell: 16             # depository charge per sell order

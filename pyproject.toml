@@ -1,0 +1,29 @@
+[project]
+name = "edgelab"
+version = "0.1.0"
+description = "EdgeLab: an idea-killing machine for Indian market trading strategies (NSE research lab)"
+requires-python = ">=3.10"
+dependencies = [
+    "smartapi-python",
+    "logzero",           # required by smartapi-python but not declared by it
+    "websocket-client",  # same
+    "pyotp",
+    "pandas",
+    "pyarrow",
+    "numpy<2",
+    "python-dotenv",
+    "pyyaml",
+    "typer",
+    "rich",
+    "requests",
+]
+
+[project.scripts]
+trader = "intraday.app:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
